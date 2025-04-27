@@ -13,7 +13,15 @@ import {
 } from "@/components/ui/select";
 import { format } from "date-fns";
 
-const categories = ["Food", "Travel", "Bills", "Entertainment", "Other"];
+const categories = [
+  "Food",
+  "Transportation",
+  "Entertainment",
+  "Utilities",
+  "Healthcare",
+  "Shopping",
+  "Others",
+];
 
 export default function TransactionForm({ onTransactionAdded }) {
   const [amount, setAmount] = useState("");
@@ -21,16 +29,19 @@ export default function TransactionForm({ onTransactionAdded }) {
   const [description, setDescription] = useState("");
   const [category, setCategory] = useState(categories[0]);
   const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(null);
+  const [success, setSuccess] = useState(false);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (!amount || !date || !description || !category) {
-      alert("All fields are required");
+      setError("All fields are required");
       return;
     }
 
     try {
       setLoading(true);
+      setError(null);
       const res = await fetch("/api/transactions/add", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -49,11 +60,14 @@ export default function TransactionForm({ onTransactionAdded }) {
         setDate(format(new Date(), "yyyy-MM-dd"));
         setDescription("");
         setCategory(categories[0]);
+        setSuccess(true);
       } else {
         console.error("Failed to add transaction");
+        setError("Failed to add transaction. Please try again.");
       }
     } catch (err) {
       console.error(err);
+      setError("An error occurred. Please try again.");
     } finally {
       setLoading(false);
     }
@@ -62,8 +76,20 @@ export default function TransactionForm({ onTransactionAdded }) {
   return (
     <form
       onSubmit={handleSubmit}
-      className="space-y-4 p-4 border rounded-xl shadow"
+      className="space-y-6 p-6 border rounded-xl shadow-lg bg-white"
     >
+      <h2 className="text-xl font-semibold text-gray-800">Add Transaction</h2>
+
+      {error && (
+        <div className="text-red-500 text-sm font-semibold">{error}</div>
+      )}
+
+      {success && (
+        <div className="text-green-500 text-sm font-semibold">
+          Transaction added successfully!
+        </div>
+      )}
+
       <div>
         <Label>Amount</Label>
         <Input
@@ -73,8 +99,10 @@ export default function TransactionForm({ onTransactionAdded }) {
           onChange={(e) => setAmount(e.target.value)}
           placeholder="Enter amount"
           required
+          className="w-full"
         />
       </div>
+
       <div>
         <Label>Date</Label>
         <Input
@@ -82,8 +110,10 @@ export default function TransactionForm({ onTransactionAdded }) {
           value={date}
           onChange={(e) => setDate(e.target.value)}
           required
+          className="w-full"
         />
       </div>
+
       <div>
         <Label>Description</Label>
         <Input
@@ -92,8 +122,10 @@ export default function TransactionForm({ onTransactionAdded }) {
           onChange={(e) => setDescription(e.target.value)}
           placeholder="Enter description"
           required
+          className="w-full"
         />
       </div>
+
       <div>
         <Label>Category</Label>
         <Select value={category} onValueChange={setCategory}>
@@ -109,7 +141,8 @@ export default function TransactionForm({ onTransactionAdded }) {
           </SelectContent>
         </Select>
       </div>
-      <Button type="submit" disabled={loading} className="w-full">
+
+      <Button type="submit" disabled={loading} className="mt-4">
         {loading ? "Adding..." : "Add Transaction"}
       </Button>
     </form>

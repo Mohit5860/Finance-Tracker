@@ -3,25 +3,64 @@
 import { useState } from "react";
 import TransactionForm from "@/components/forms/TransactionForm";
 import TransactionList from "@/components/transactions/TransactionList";
+import BudgetForm from "@/components/forms/BudgetForm";
+import BudgetVsActualChart from "@/components/charts/BudgetVsActualChart";
+import SpendingInsights from "@/components/insights/SpendingInsights";
 import MonthlyExpensesChart from "@/components/charts/MonthlyExpensesChart";
-import SummaryCards from "@/components/dashboard/SummaryCards";
 import CategoryPieChart from "@/components/charts/CategoryPieChart";
+import SummaryCards from "@/components/dashboard/SummaryCards";
 
-export default function HomePage() {
+export default function Dashboard() {
   const [refresh, setRefresh] = useState(false);
 
-  const handleTransactionAdded = () => {
-    setRefresh(!refresh);
-  };
+  const handleRefresh = () => setRefresh(!refresh);
 
   return (
-    <div className="max-w-4xl mx-auto p-4 space-y-6">
-      <h1 className="text-2xl font-bold">Personal Finance Tracker</h1>
-      <TransactionForm onTransactionAdded={handleTransactionAdded} />
-      <MonthlyExpensesChart refreshTrigger={refresh} />
-      <TransactionList refreshTrigger={refresh} />
-      <SummaryCards refreshTrigger={refresh} />
-      <CategoryPieChart refreshTrigger={refresh} />
+    <div className="p-8 bg-gray-50 min-h-screen space-y-10">
+      <div className="space-y-6">
+        <h1 className="text-3xl font-semibold text-center text-gray-800">
+          Personal Finance Tracker
+        </h1>
+
+        {/* Transaction Form */}
+        <div className="bg-white p-6 rounded-lg shadow-md">
+          <TransactionForm onTransactionAdded={handleRefresh} />
+        </div>
+
+        {/* Transaction List */}
+        <div className="bg-white p-6 rounded-lg shadow-md">
+          <TransactionList refreshTrigger={refresh} />
+        </div>
+
+        <div className="bg-white p-6 rounded-lg shadow-md">
+          <SummaryCards refreshTrigger={refresh} />
+        </div>
+
+        {/* Budget Form */}
+        <div className="bg-white p-6 rounded-lg shadow-md">
+          <BudgetForm onBudgetAdded={handleRefresh} />
+        </div>
+      </div>
+
+      {/* Charts Section */}
+      <div className="space-y-6">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+          <div className="bg-white p-6 rounded-lg shadow-md">
+            <MonthlyExpensesChart refreshTrigger={refresh} />
+          </div>
+          <div className="bg-white p-6 rounded-lg shadow-md">
+            <CategoryPieChart refreshTrigger={refresh} />
+          </div>
+          <div className="bg-white p-6 rounded-lg shadow-md">
+            <BudgetVsActualChart refreshTrigger={refresh} />
+          </div>
+        </div>
+      </div>
+
+      {/* Insights Section */}
+      <div className="bg-white p-6 rounded-lg shadow-md">
+        <SpendingInsights refreshTrigger={refresh} />
+      </div>
     </div>
   );
 }
