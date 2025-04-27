@@ -4,6 +4,8 @@ import { useState } from "react";
 import TransactionForm from "@/components/forms/TransactionForm";
 import TransactionList from "@/components/transactions/TransactionList";
 import MonthlyExpensesChart from "@/components/charts/MonthlyExpensesChart";
+import SummaryCards from "@/components/dashboard/SummaryCards";
+import CategoryPieChart from "@/components/charts/CategoryPieChart";
 
 export default function HomePage() {
   const [refresh, setRefresh] = useState(false);
@@ -18,6 +20,8 @@ export default function HomePage() {
       <TransactionForm onTransactionAdded={handleTransactionAdded} />
       <MonthlyExpensesChart refreshTrigger={refresh} />
       <TransactionList refreshTrigger={refresh} />
+      <SummaryCards refreshTrigger={refresh} />
+      <CategoryPieChart refreshTrigger={refresh} />
     </div>
   );
 }
