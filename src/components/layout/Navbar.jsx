@@ -15,7 +15,7 @@ export default function Navbar({ onThemeToggle, isDarkMode }) {
   const { user, logout, isAuthenticated } = useAuth();
 
   const navItems = [
-    { label: "Dashboard", href: "/", icon: Home },
+    { label: "Dashboard", href: "/dashboard", icon: Home },
     { label: "Analytics", href: "/analytics", icon: BarChart3 },
     { label: "Goals", href: "/goals", icon: Target },
     { label: "Reports", href: "/reports", icon: TrendingUp },
@@ -39,7 +39,7 @@ export default function Navbar({ onThemeToggle, isDarkMode }) {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center h-16">
           {/* Logo */}
-          <Link href="/" className="flex items-center gap-2 group">
+          <Link href={isAuthenticated ? "/dashboard" : "/"} className="flex items-center gap-2 group">
             <div className="p-2 bg-gradient-to-br from-blue-600 to-blue-700 rounded-lg group-hover:shadow-lg transition-shadow">
               <DollarSign className="text-white" size={24} />
             </div>

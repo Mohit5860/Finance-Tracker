@@ -39,11 +39,7 @@ export default function Goals() {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    if (
-      !formData.name ||
-      !formData.targetAmount ||
-      !formData.deadline
-    ) {
+    if (!formData.name || !formData.targetAmount || !formData.deadline) {
       alert("Please fill in all required fields");
       return;
     }
@@ -107,7 +103,7 @@ export default function Goals() {
   const getGoalStatus = (goal) => {
     const progress = (goal.currentAmount / goal.targetAmount) * 100;
     const daysLeft = Math.ceil(
-      (new Date(goal.deadline) - new Date()) / (1000 * 60 * 60 * 24)
+      (new Date(goal.deadline) - new Date()) / (1000 * 60 * 60 * 24),
     );
 
     return {
@@ -120,7 +116,6 @@ export default function Goals() {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 to-slate-100 dark:from-slate-950 dark:to-slate-900">
-      {/* Header */}
       <div className="bg-gradient-to-r from-purple-600 to-purple-700 dark:from-purple-900 dark:to-purple-800 text-white">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
           <div className="flex items-center justify-between">
@@ -144,9 +139,7 @@ export default function Goals() {
         </div>
       </div>
 
-      {/* Content */}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        {/* Form */}
         {showForm && (
           <div className="bg-white dark:bg-slate-900 rounded-xl shadow-md p-6 mb-8 border border-gray-200 dark:border-slate-800">
             <h2 className="text-xl font-bold text-gray-900 dark:text-white mb-6">
@@ -217,7 +210,10 @@ export default function Goals() {
               </div>
 
               <div className="flex gap-2 pt-4">
-                <Button type="submit" className="bg-purple-600 hover:bg-purple-700">
+                <Button
+                  type="submit"
+                  className="bg-purple-600 hover:bg-purple-700"
+                >
                   Create Goal
                 </Button>
                 <Button
@@ -232,7 +228,6 @@ export default function Goals() {
           </div>
         )}
 
-        {/* Goals Grid */}
         {loading ? (
           <div className="text-center py-12 text-gray-600 dark:text-gray-400">
             Loading goals...
@@ -283,12 +278,13 @@ export default function Goals() {
                     </Button>
                   </div>
 
-                  {/* Status */}
                   <div className="flex items-center gap-2 mb-4">
                     {status.isCompleted ? (
                       <div className="flex items-center gap-1 text-green-600 dark:text-green-400">
                         <CheckCircle size={18} />
-                        <span className="text-sm font-semibold">Completed!</span>
+                        <span className="text-sm font-semibold">
+                          Completed!
+                        </span>
                       </div>
                     ) : status.isOverdue ? (
                       <div className="flex items-center gap-1 text-red-600 dark:text-red-400">
@@ -302,7 +298,6 @@ export default function Goals() {
                     )}
                   </div>
 
-                  {/* Progress Bar */}
                   <div className="mb-4">
                     <div className="flex justify-between items-center mb-2">
                       <span className="text-sm font-semibold text-gray-700 dark:text-gray-300">
@@ -320,7 +315,6 @@ export default function Goals() {
                     </div>
                   </div>
 
-                  {/* Amount Info */}
                   <div className="space-y-2 mb-4 pb-4 border-b border-gray-200 dark:border-slate-700">
                     <div className="flex justify-between">
                       <span className="text-gray-600 dark:text-gray-400">
@@ -343,12 +337,15 @@ export default function Goals() {
                         Remaining:
                       </span>
                       <span className="font-semibold text-gray-900 dark:text-white">
-                        ${Math.max(0, goal.targetAmount - goal.currentAmount).toFixed(2)}
+                        $
+                        {Math.max(
+                          0,
+                          goal.targetAmount - goal.currentAmount,
+                        ).toFixed(2)}
                       </span>
                     </div>
                   </div>
 
-                  {/* Update Progress */}
                   {!status.isCompleted && (
                     <div className="flex gap-2">
                       <input
@@ -363,13 +360,12 @@ export default function Goals() {
                         size="sm"
                         onClick={() => {
                           const input = document.getElementById(
-                            `goal-input-${goal._id}`
+                            `goal-input-${goal._id}`,
                           );
                           if (input.value) {
                             handleUpdateProgress(
                               goal._id,
-                              goal.currentAmount +
-                                parseFloat(input.value)
+                              goal.currentAmount + parseFloat(input.value),
                             );
                             input.value = "";
                           }

@@ -1,13 +1,25 @@
 import { connectDB } from "@/lib/db";
+import { getUserIdFromRequest } from "@/lib/auth";
 import Budget from "@/models/Budget";
 import Transaction from "@/models/Transaction";
 
-export async function GET() {
+export async function GET(request) {
   try {
     await connectDB();
+    const userId = getUserIdFromRequest(request);
 
-    const budgets = await Budget.find({});
-    const transactions = await Transaction.find({});
+    if (!userId) {
+      return new Response(
+        JSON.stringify({ error: "Unauthorized" }),
+        {
+          status: 401,
+          headers: { "Content-Type": "application/json" },
+        }
+      );
+    }
+
+    const budgets = await Budget.find({ userId });
+    const transactions = await Transaction.find({ userId });
 
     const actuals = {};
     transactions.forEach((tx) => {

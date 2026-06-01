@@ -1,13 +1,21 @@
 import { connectDB } from "@/lib/db";
+import { getUserIdFromRequest } from "@/lib/auth";
 import Transaction from "@/models/Transaction";
 
-export async function GET() {
+export async function GET(request) {
   try {
     await connectDB();
+    const userId = getUserIdFromRequest(request);
 
-    const transactions = await Transaction.find();
+    if (!userId) {
+      return new Response(JSON.stringify({ error: "Unauthorized" }), {
+        status: 401,
+        headers: { "Content-Type": "application/json" },
+      });
+    }
 
-    // Group transactions by month
+    const transactions = await Transaction.find({ userId });
+
     const monthlyTotals = {};
 
     transactions.forEach((t) => {
@@ -29,7 +37,7 @@ export async function GET() {
     console.error(error);
     return new Response(
       JSON.stringify({ error: "Failed to fetch monthly data" }),
-      { status: 500 }
+      { status: 500 },
     );
   }
 }

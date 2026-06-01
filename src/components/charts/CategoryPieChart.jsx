@@ -32,7 +32,7 @@ export default function CategoryPieChart({ refreshTrigger }) {
   };
 
   return (
-    <div className="p-4 border rounded-xl shadow">
+    <div className="p-4 border border-gray-200 dark:border-slate-800 rounded-xl shadow bg-white dark:bg-slate-900">
       <h2 className="text-lg font-semibold mb-4">Expenses by Category</h2>
       <ResponsiveContainer width="100%" height={300}>
         <PieChart>

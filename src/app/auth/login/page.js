@@ -40,7 +40,7 @@ function LoginFormComponent() {
       const result = await login(formData.email, formData.password);
 
       if (result.success) {
-        router.push("/");
+        router.push("/dashboard");
       } else {
         setError(result.error);
       }
@@ -54,7 +54,6 @@ function LoginFormComponent() {
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-600 to-blue-700 dark:from-blue-900 dark:to-blue-800 flex items-center justify-center p-4">
       <div className="w-full max-w-md">
-        {/* Logo Section */}
         <div className="text-center mb-8">
           <div className="flex justify-center mb-4">
             <div className="p-3 bg-white/20 rounded-lg backdrop-blur-sm">
@@ -65,16 +64,17 @@ function LoginFormComponent() {
           <p className="text-blue-100">Manage your finances with ease</p>
         </div>
 
-        {/* Login Card */}
         <div className="bg-white dark:bg-slate-900 rounded-xl shadow-2xl p-8 border border-gray-200 dark:border-slate-800">
           <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-6">
             Welcome Back
           </h2>
 
-          {/* Error Messages */}
           {(error || authError) && (
             <div className="mb-6 p-4 bg-red-50 dark:bg-red-950 border border-red-200 dark:border-red-800 rounded-lg flex items-start gap-3">
-              <AlertCircle className="text-red-600 dark:text-red-400 flex-shrink-0 mt-0.5" size={20} />
+              <AlertCircle
+                className="text-red-600 dark:text-red-400 flex-shrink-0 mt-0.5"
+                size={20}
+              />
               <p className="text-red-800 dark:text-red-200 text-sm">
                 {error || authError}
               </p>
@@ -82,13 +82,15 @@ function LoginFormComponent() {
           )}
 
           <form onSubmit={handleSubmit} className="space-y-4">
-            {/* Email */}
             <div>
               <label className="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">
                 Email Address
               </label>
               <div className="relative">
-                <Mail className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" size={20} />
+                <Mail
+                  className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400"
+                  size={20}
+                />
                 <input
                   type="email"
                   name="email"
@@ -101,13 +103,15 @@ function LoginFormComponent() {
               </div>
             </div>
 
-            {/* Password */}
             <div>
               <label className="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">
                 Password
               </label>
               <div className="relative">
-                <Lock className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" size={20} />
+                <Lock
+                  className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400"
+                  size={20}
+                />
                 <input
                   type="password"
                   name="password"
@@ -120,7 +124,6 @@ function LoginFormComponent() {
               </div>
             </div>
 
-            {/* Submit Button */}
             <Button
               type="submit"
               disabled={loading}
@@ -137,14 +140,14 @@ function LoginFormComponent() {
             </Button>
           </form>
 
-          {/* Divider */}
           <div className="flex items-center my-6">
             <div className="flex-1 border-t border-gray-300 dark:border-slate-700"></div>
-            <span className="px-3 text-gray-500 dark:text-gray-400 text-sm">OR</span>
+            <span className="px-3 text-gray-500 dark:text-gray-400 text-sm">
+              OR
+            </span>
             <div className="flex-1 border-t border-gray-300 dark:border-slate-700"></div>
           </div>
 
-          {/* Sign Up Link */}
           <p className="text-center text-gray-600 dark:text-gray-400">
             Don&apos;t have an account?{" "}
             <Link
@@ -156,9 +159,10 @@ function LoginFormComponent() {
           </p>
         </div>
 
-        {/* Demo Credentials */}
         <div className="mt-6 p-4 bg-white/10 backdrop-blur-sm rounded-lg border border-white/20">
-          <p className="text-white text-xs mb-2 font-semibold">Demo Credentials:</p>
+          <p className="text-white text-xs mb-2 font-semibold">
+            Demo Credentials:
+          </p>
           <p className="text-blue-100 text-xs">Email: demo@example.com</p>
           <p className="text-blue-100 text-xs">Password: demo123</p>
         </div>

@@ -150,42 +150,9 @@ Navigate to `http://localhost:3000`
 
 ### Settings
 - Manage profile information and preferences
-- Configure currency preference
-- Enable/disable notifications
 - Export all financial data as JSON backup
 - Delete all data (with confirmation)
 
-## 🔑 API Endpoints
-
-### Transactions
-- `GET /api/transactions/get` - Get all transactions
-- `POST /api/transactions/add` - Add new transaction
-- `DELETE /api/transactions/delete?id={id}` - Delete transaction
-- `GET /api/transactions/summary` - Get summary data
-- `GET /api/transactions/monthly` - Get monthly aggregates
-- `GET /api/transactions/categories` - Get category breakdown
-
-### Budgets
-- `GET /api/budgets` - Get all budgets
-- `POST /api/budgets` - Create/update budget
-- `GET /api/budgets/compare` - Compare budget vs actual
-- `GET /api/budgets/insights` - Get spending insights
-
-### Goals
-- `GET /api/goals` - Get all goals
-- `POST /api/goals` - Create new goal
-- `PUT /api/goals/[id]` - Update goal progress
-- `DELETE /api/goals?id={id}` - Delete goal
-
-## 🎨 Design Features
-
-- **Modern UI**: Clean, professional design with gradient headers
-- **Responsive Layout**: Mobile-first design that works on all devices
-- **Dark Mode**: Full dark mode support with smooth transitions
-- **Color-Coded Categories**: Easy identification of transaction types
-- **Smooth Animations**: Hover effects and transitions for better UX
-- **Accessible Components**: Built on Radix UI for accessibility
-- **Consistent Spacing**: Proper padding and margins throughout
 
 ## 📊 Example Use Cases
 
@@ -258,10 +225,6 @@ npm run lint     # Run ESLint
 - Social sharing of financial milestones
 - Machine learning for spending predictions
 
-## 📄 License
-
-This project is open source and available under the MIT License.
-
 ## 🤝 Contributing
 
 Contributions are welcome! Feel free to fork this repository and submit pull requests.
@@ -269,7 +232,3 @@ Contributions are welcome! Feel free to fork this repository and submit pull req
 ## 📞 Support
 
 For issues, questions, or suggestions, please open an issue on the GitHub repository.
-
----
-
-**Made with ❤️ for better financial management**

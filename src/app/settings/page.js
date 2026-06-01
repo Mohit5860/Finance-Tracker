@@ -1,10 +1,13 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { Settings as SettingsIcon, User, Lock, Bell, HelpCircle, Download, Trash2 } from "lucide-react";
+import { Settings as SettingsIcon, User, Download, Trash2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { useAuth } from "@/context/AuthContext";
 
 export default function Settings() {
+  const { user, updateUser } = useAuth();
+
   const [profile, setProfile] = useState({
     name: "",
     email: "",
@@ -15,15 +18,25 @@ export default function Settings() {
   const [saveStatus, setSaveStatus] = useState("");
 
   useEffect(() => {
-    // Load settings from localStorage
     const saved = localStorage.getItem("fintrackSettings");
-    if (saved) {
-      setProfile(JSON.parse(saved));
-    }
-  }, []);
+    const initialSettings = saved ? JSON.parse(saved) : {};
+
+    setProfile({
+      name: user?.name || initialSettings.name || "",
+      email: user?.email || initialSettings.email || "",
+      currency: initialSettings.currency || "USD",
+      notifications:
+        initialSettings.notifications !== undefined
+          ? initialSettings.notifications
+          : true,
+    });
+  }, [user]);
 
   const handleSaveSettings = () => {
     localStorage.setItem("fintrackSettings", JSON.stringify(profile));
+    if (updateUser) {
+      updateUser({ name: profile.name, email: profile.email });
+    }
     setSaveStatus("Settings saved successfully!");
     setTimeout(() => setSaveStatus(""), 3000);
   };
@@ -38,8 +51,8 @@ export default function Settings() {
 
       const data = {
         exportDate: new Date().toISOString(),
-        transactions: transactions.transactions || [],
-        budgets: budgets.budgets || [],
+        transactions: transactions || [],
+        budgets: budgets || [],
         profile,
       };
 
@@ -58,30 +71,28 @@ export default function Settings() {
   const handleDeleteAllData = () => {
     if (
       confirm(
-        "This will permanently delete all your transactions and budgets. This cannot be undone. Are you sure?"
+        "This will permanently delete all your transactions and budgets. This cannot be undone. Are you sure?",
       )
     ) {
       if (
         confirm(
-          "This is your last chance to back up your data. Do you really want to continue?"
+          "This is your last chance to back up your data. Do you really want to continue?",
         )
       ) {
-        // Delete all transactions
         fetch("/api/transactions/get")
           .then((res) => res.json())
           .then((data) => {
-            data.transactions?.forEach((t) => {
+            (data || [])?.forEach((t) => {
               fetch(`/api/transactions/delete?id=${t._id}`, {
                 method: "DELETE",
               });
             });
           });
 
-        // Delete all budgets
         fetch("/api/budgets")
           .then((res) => res.json())
           .then((data) => {
-            data.budgets?.forEach((b) => {
+            (data || [])?.forEach((b) => {
               fetch(`/api/budgets?id=${b._id}`, { method: "DELETE" });
             });
           });
@@ -93,7 +104,6 @@ export default function Settings() {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 to-slate-100 dark:from-slate-950 dark:to-slate-900">
-      {/* Header */}
       <div className="bg-gradient-to-r from-slate-700 to-slate-800 dark:from-slate-900 dark:to-slate-950 text-white">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
           <div className="flex items-center gap-3">
@@ -108,16 +118,13 @@ export default function Settings() {
         </div>
       </div>
 
-      {/* Content */}
       <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        {/* Success Message */}
         {saveStatus && (
           <div className="mb-6 p-4 bg-green-50 dark:bg-green-950 border border-green-200 dark:border-green-800 rounded-lg text-green-800 dark:text-green-100">
             {saveStatus}
           </div>
         )}
 
-        {/* Profile Settings */}
         <div className="bg-white dark:bg-slate-900 rounded-xl shadow-md p-6 mb-6 border border-gray-200 dark:border-slate-800">
           <div className="flex items-center gap-3 mb-6">
             <User size={24} className="text-slate-700 dark:text-slate-300" />
@@ -156,26 +163,6 @@ export default function Settings() {
                 className="w-full px-4 py-2 border border-gray-300 dark:border-slate-700 rounded-lg bg-white dark:bg-slate-800 text-gray-900 dark:text-white"
               />
             </div>
-
-            <div>
-              <label className="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">
-                Currency
-              </label>
-              <select
-                value={profile.currency}
-                onChange={(e) =>
-                  setProfile({ ...profile, currency: e.target.value })
-                }
-                className="w-full px-4 py-2 border border-gray-300 dark:border-slate-700 rounded-lg bg-white dark:bg-slate-800 text-gray-900 dark:text-white"
-              >
-                <option value="USD">USD ($)</option>
-                <option value="EUR">EUR (€)</option>
-                <option value="GBP">GBP (£)</option>
-                <option value="CAD">CAD (C$)</option>
-                <option value="AUD">AUD (A$)</option>
-                <option value="INR">INR (₹)</option>
-              </select>
-            </div>
           </div>
 
           <Button
@@ -186,46 +173,12 @@ export default function Settings() {
           </Button>
         </div>
 
-        {/* Notification Settings */}
         <div className="bg-white dark:bg-slate-900 rounded-xl shadow-md p-6 mb-6 border border-gray-200 dark:border-slate-800">
           <div className="flex items-center gap-3 mb-6">
-            <Bell size={24} className="text-slate-700 dark:text-slate-300" />
-            <h2 className="text-2xl font-bold text-gray-900 dark:text-white">
-              Notifications
-            </h2>
-          </div>
-
-          <div className="space-y-4">
-            <label className="flex items-center cursor-pointer">
-              <input
-                type="checkbox"
-                checked={profile.notifications}
-                onChange={(e) =>
-                  setProfile({
-                    ...profile,
-                    notifications: e.target.checked,
-                  })
-                }
-                className="w-4 h-4 rounded"
-              />
-              <span className="ml-3 text-gray-900 dark:text-white">
-                Enable budget alerts and spending notifications
-              </span>
-            </label>
-          </div>
-
-          <Button
-            onClick={handleSaveSettings}
-            className="mt-6 bg-slate-700 hover:bg-slate-800"
-          >
-            Save Notification Settings
-          </Button>
-        </div>
-
-        {/* Data Management */}
-        <div className="bg-white dark:bg-slate-900 rounded-xl shadow-md p-6 mb-6 border border-gray-200 dark:border-slate-800">
-          <div className="flex items-center gap-3 mb-6">
-            <Download size={24} className="text-slate-700 dark:text-slate-300" />
+            <Download
+              size={24}
+              className="text-slate-700 dark:text-slate-300"
+            />
             <h2 className="text-2xl font-bold text-gray-900 dark:text-white">
               Data Management
             </h2>
@@ -233,7 +186,8 @@ export default function Settings() {
 
           <div className="space-y-4 mb-6">
             <p className="text-gray-700 dark:text-gray-300">
-              Export your financial data as a backup or to use in other applications.
+              Export your financial data as a backup or to use in other
+              applications.
             </p>
             <Button
               onClick={handleExportData}
@@ -246,7 +200,6 @@ export default function Settings() {
           </div>
         </div>
 
-        {/* Danger Zone */}
         <div className="bg-red-50 dark:bg-red-950 border-2 border-red-200 dark:border-red-800 rounded-xl p-6">
           <div className="flex items-center gap-3 mb-6">
             <Trash2 size={24} className="text-red-600 dark:text-red-400" />
@@ -267,37 +220,6 @@ export default function Settings() {
             <Trash2 size={18} />
             Delete All Data
           </Button>
-        </div>
-
-        {/* Help Section */}
-        <div className="bg-white dark:bg-slate-900 rounded-xl shadow-md p-6 mt-6 border border-gray-200 dark:border-slate-800">
-          <div className="flex items-center gap-3 mb-6">
-            <HelpCircle size={24} className="text-slate-700 dark:text-slate-300" />
-            <h2 className="text-2xl font-bold text-gray-900 dark:text-white">
-              Need Help?
-            </h2>
-          </div>
-
-          <div className="space-y-3 text-gray-700 dark:text-gray-300">
-            <p>
-              <strong>Keyboard Shortcuts:</strong>
-            </p>
-            <ul className="list-disc list-inside space-y-2 ml-2">
-              <li>Use the navigation bar to switch between pages</li>
-              <li>Dark mode toggle is available in the top right</li>
-              <li>Export reports from the Reports page</li>
-            </ul>
-
-            <p className="mt-4">
-              <strong>Tips:</strong>
-            </p>
-            <ul className="list-disc list-inside space-y-2 ml-2">
-              <li>Set realistic monthly budgets to track spending</li>
-              <li>Review your analytics page regularly</li>
-              <li>Use the goals feature to plan for future expenses</li>
-              <li>Export your data regularly as a backup</li>
-            </ul>
-          </div>
         </div>
       </div>
     </div>

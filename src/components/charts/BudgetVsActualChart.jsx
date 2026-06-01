@@ -29,7 +29,7 @@ export default function BudgetVsActualChart({ refreshTrigger }) {
   };
 
   return (
-    <div className="p-4 border rounded-xl shadow bg-white">
+    <div className="p-4 border rounded-xl shadow bg-white dark:bg-slate-900">
       <h2 className="text-lg font-semibold mb-4">Budget vs Actual Expenses</h2>
       <ResponsiveContainer width="100%" height={300}>
         <BarChart data={data}>

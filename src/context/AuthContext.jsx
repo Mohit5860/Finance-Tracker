@@ -2,6 +2,35 @@
 
 import { createContext, useContext, useState, useEffect } from "react";
 
+// Intercept global fetch on client side to append Authorization header for local API calls
+if (typeof window !== "undefined") {
+  const originalFetch = window.fetch;
+  window.fetch = async function (resource, options = {}) {
+    const url = typeof resource === "string" ? resource : resource?.url;
+
+    // Only append token for relative URLs (our API)
+    if (url && (url.startsWith("/api/") || !url.startsWith("http"))) {
+      const token = localStorage.getItem("token");
+      if (token) {
+        if (!options.headers) {
+          options.headers = {};
+        }
+        if (options.headers instanceof Headers) {
+          options.headers.set("Authorization", `Bearer ${token}`);
+        } else if (Array.isArray(options.headers)) {
+          options.headers.push(["Authorization", `Bearer ${token}`]);
+        } else {
+          options.headers = {
+            ...options.headers,
+            Authorization: `Bearer ${token}`,
+          };
+        }
+      }
+    }
+    return originalFetch(resource, options);
+  };
+}
+
 const AuthContext = createContext(null);
 
 export function AuthProvider({ children }) {
@@ -90,6 +119,13 @@ export function AuthProvider({ children }) {
     setError(null);
   };
 
+  const updateUser = (updatedUser) => {
+    const currentUser = JSON.parse(localStorage.getItem("user") || "{}");
+    const newUserData = { ...currentUser, ...updatedUser };
+    localStorage.setItem("user", JSON.stringify(newUserData));
+    setUser(newUserData);
+  };
+
   return (
     <AuthContext.Provider
       value={{
@@ -99,6 +135,7 @@ export function AuthProvider({ children }) {
         register,
         login,
         logout,
+        updateUser,
         isAuthenticated: !!user,
       }}
     >
@@ -119,6 +156,7 @@ export function useAuth() {
       register: async () => ({ success: false, error: "Not ready" }),
       login: async () => ({ success: false, error: "Not ready" }),
       logout: () => {},
+      updateUser: () => {},
       isAuthenticated: false,
     };
   }

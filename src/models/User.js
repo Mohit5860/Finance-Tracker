@@ -13,7 +13,10 @@ const userSchema = new mongoose.Schema(
       required: [true, "Please provide an email"],
       unique: true,
       lowercase: true,
-      match: [/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/, "Please provide a valid email"],
+      match: [
+        /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/,
+        "Please provide a valid email",
+      ],
     },
     password: {
       type: String,
@@ -34,12 +37,10 @@ const userSchema = new mongoose.Schema(
       default: Date.now,
     },
   },
-  { timestamps: true }
+  { timestamps: true },
 );
 
-// Hash password before saving
 userSchema.pre("save", async function (next) {
-  // Only hash if password is modified
   if (!this.isModified("password")) {
     return next();
   }

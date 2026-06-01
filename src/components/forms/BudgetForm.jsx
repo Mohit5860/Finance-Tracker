@@ -70,11 +70,8 @@ export default function BudgetForm({ onBudgetAdded }) {
   return (
     <form
       onSubmit={handleSubmit}
-      className="space-y-6 p-6 border rounded-xl shadow-lg bg-white"
+      className="space-y-4"
     >
-      <h2 className="text-2xl font-semibold text-gray-800">
-        Set Monthly Budget
-      </h2>
 
       {error && (
         <div className="text-red-500 text-sm font-semibold">{error}</div>

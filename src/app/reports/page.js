@@ -52,7 +52,6 @@ export default function Reports() {
   }, [generateReport]);
 
   const handleExportPDF = () => {
-    // Simple text-based export (PDF would require a library)
     const text = generateReportText();
     const blob = new Blob([text], { type: "text/plain" });
     const url = window.URL.createObjectURL(blob);
@@ -106,7 +105,6 @@ export default function Reports() {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 to-slate-100 dark:from-slate-950 dark:to-slate-900">
-      {/* Header */}
       <div className="bg-gradient-to-r from-amber-600 to-amber-700 dark:from-amber-900 dark:to-amber-800 text-white">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
           <div className="flex items-center gap-3">
@@ -123,7 +121,6 @@ export default function Reports() {
 
       {/* Content */}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        {/* Month Selector */}
         <div className="bg-white dark:bg-slate-900 rounded-xl shadow-md p-6 mb-8 border border-gray-200 dark:border-slate-800 flex flex-col sm:flex-row gap-4 items-start sm:items-center">
           <div className="flex items-center gap-2">
             <Calendar
@@ -156,7 +153,6 @@ export default function Reports() {
           </div>
         ) : reportData ? (
           <div className="space-y-6">
-            {/* Summary Cards */}
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
               <div className="bg-white dark:bg-slate-900 rounded-xl p-6 border border-gray-200 dark:border-slate-800 shadow-md">
                 <p className="text-sm font-medium text-gray-600 dark:text-gray-400 mb-2">
@@ -189,7 +185,6 @@ export default function Reports() {
               </div>
             </div>
 
-            {/* Category Breakdown */}
             <div className="bg-white dark:bg-slate-900 rounded-xl shadow-md p-6 border border-gray-200 dark:border-slate-800">
               <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-6">
                 Spending by Category
@@ -230,7 +225,6 @@ export default function Reports() {
               </div>
             </div>
 
-            {/* Transactions List */}
             <div className="bg-white dark:bg-slate-900 rounded-xl shadow-md p-6 border border-gray-200 dark:border-slate-800">
               <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-6">
                 Transaction Details

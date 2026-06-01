@@ -37,14 +37,12 @@ export default function Analytics() {
 
       let filtered = data || [];
 
-      // Apply category filter
       if (selectedCategory !== "all") {
         filtered = filtered.filter(
           (t) => t.category.toLowerCase() === selectedCategory.toLowerCase(),
         );
       }
 
-      // Apply time filter
       const now = new Date();
       if (filter === "week") {
         const weekAgo = new Date(now.getTime() - 7 * 24 * 60 * 60 * 1000);
@@ -119,7 +117,6 @@ export default function Analytics() {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 to-slate-100 dark:from-slate-950 dark:to-slate-900">
-      {/* Header */}
       <div className="bg-gradient-to-r from-emerald-600 to-emerald-700 dark:from-emerald-900 dark:to-emerald-800 text-white">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
           <div className="flex items-center gap-3 mb-4">
@@ -132,9 +129,7 @@ export default function Analytics() {
         </div>
       </div>
 
-      {/* Content */}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        {/* Filters */}
         <div className="bg-white dark:bg-slate-900 rounded-xl shadow-md p-6 mb-8 border border-gray-200 dark:border-slate-800">
           <div className="flex flex-col sm:flex-row gap-4 items-start sm:items-center flex-wrap">
             <div className="flex items-center gap-2">
@@ -144,7 +139,6 @@ export default function Analytics() {
               </span>
             </div>
 
-            {/* Time Filter */}
             <div className="flex gap-2">
               {["all", "week", "month", "year"].map((period) => (
                 <Button
@@ -158,8 +152,6 @@ export default function Analytics() {
                 </Button>
               ))}
             </div>
-
-            {/* Category Filter */}
             <select
               value={selectedCategory}
               onChange={(e) => setSelectedCategory(e.target.value)}
@@ -172,8 +164,6 @@ export default function Analytics() {
                 </option>
               ))}
             </select>
-
-            {/* Export Button */}
             <Button
               onClick={handleExport}
               variant="secondary"
@@ -185,7 +175,6 @@ export default function Analytics() {
           </div>
         </div>
 
-        {/* Statistics Cards */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
           <StatCard
             title="Total Expenses"
@@ -213,7 +202,6 @@ export default function Analytics() {
           />
         </div>
 
-        {/* Charts Section */}
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-8">
           <div className="bg-white dark:bg-slate-900 rounded-xl shadow-md p-6 border border-gray-200 dark:border-slate-800">
             <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">
@@ -230,7 +218,6 @@ export default function Analytics() {
           </div>
         </div>
 
-        {/* Budget Comparison */}
         <div className="bg-white dark:bg-slate-900 rounded-xl shadow-md p-6 border border-gray-200 dark:border-slate-800 mb-8">
           <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">
             Budget Comparison
@@ -238,7 +225,6 @@ export default function Analytics() {
           <BudgetVsActualChart refreshTrigger={selectedCategory} />
         </div>
 
-        {/* Transactions Table */}
         <div className="bg-white dark:bg-slate-900 rounded-xl shadow-md p-6 border border-gray-200 dark:border-slate-800">
           <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">
             Transaction Details

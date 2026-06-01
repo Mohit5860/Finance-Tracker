@@ -1,13 +1,25 @@
 import { connectDB } from "@/lib/db";
+import { getUserIdFromRequest } from "@/lib/auth";
 import Budget from "@/models/Budget";
 
 export async function POST(request) {
   try {
     await connectDB();
+    const userId = getUserIdFromRequest(request);
 
-    const { category, amount, month } = request.json();
+    if (!userId) {
+      return new Response(
+        JSON.stringify({ error: "Unauthorized" }),
+        {
+          status: 401,
+          headers: { "Content-Type": "application/json" },
+        }
+      );
+    }
 
-    const budget = await Budget.create({ category, amount, month });
+    const { category, amount, month } = await request.json();
+
+    const budget = await Budget.create({ category, amount, month, userId });
 
     return new Response(JSON.stringify(budget), {
       status: 201,
