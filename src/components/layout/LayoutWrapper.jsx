@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from "react";
 import Navbar from "./Navbar";
+import { AuthProvider } from "@/context/AuthContext";
 
 export default function LayoutWrapper({ children }) {
   const [isDarkMode, setIsDarkMode] = useState(false);
@@ -37,9 +38,11 @@ export default function LayoutWrapper({ children }) {
   }
 
   return (
-    <div className="min-h-screen bg-white dark:bg-slate-950 transition-colors">
-      <Navbar onThemeToggle={() => setIsDarkMode(!isDarkMode)} isDarkMode={isDarkMode} />
-      {children}
-    </div>
+    <AuthProvider>
+      <div className="min-h-screen bg-white dark:bg-slate-950 transition-colors">
+        <Navbar onThemeToggle={() => setIsDarkMode(!isDarkMode)} isDarkMode={isDarkMode} />
+        {children}
+      </div>
+    </AuthProvider>
   );
 }

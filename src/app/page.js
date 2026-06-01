@@ -1,6 +1,7 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { useRouter } from "next/navigation";
 import TransactionForm from "@/components/forms/TransactionForm";
 import TransactionList from "@/components/transactions/TransactionList";
 import BudgetForm from "@/components/forms/BudgetForm";
@@ -9,11 +10,13 @@ import SpendingInsights from "@/components/insights/SpendingInsights";
 import MonthlyExpensesChart from "@/components/charts/MonthlyExpensesChart";
 import CategoryPieChart from "@/components/charts/CategoryPieChart";
 import SummaryCards from "@/components/dashboard/SummaryCards";
-import { ArrowRight, PlusCircle } from "lucide-react";
+import { ArrowRight, PlusCircle, Loader } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
 
-export default function Dashboard() {
+export const dynamic = 'force-dynamic';
+
+function DashboardContent() {
   const [refresh, setRefresh] = useState(false);
 
   const handleRefresh = () => setRefresh(!refresh);
@@ -116,4 +119,36 @@ export default function Dashboard() {
       </div>
     </div>
   );
+}
+
+export default function Dashboard() {
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [loading, setLoading] = useState(true);
+  const router = useRouter();
+
+  useEffect(() => {
+    // Check if user is authenticated
+    const user = localStorage.getItem("user");
+    const token = localStorage.getItem("token");
+    
+    if (user && token) {
+      setIsAuthenticated(true);
+    } else {
+      router.push("/auth/login");
+    }
+    setLoading(false);
+  }, [router]);
+
+  if (loading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-slate-50 to-slate-100 dark:from-slate-950 dark:to-slate-900">
+        <div className="text-center">
+          <Loader className="animate-spin mx-auto mb-4 text-blue-600 dark:text-blue-400" size={40} />
+          <p className="text-gray-600 dark:text-gray-400">Loading...</p>
+        </div>
+      </div>
+    );
+  }
+
+  return isAuthenticated ? <DashboardContent /> : null;
 }

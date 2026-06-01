@@ -35,12 +35,12 @@ export default function Analytics() {
       const response = await fetch("/api/transactions/get");
       const data = await response.json();
 
-      let filtered = data.transactions || [];
+      let filtered = data || [];
 
       // Apply category filter
       if (selectedCategory !== "all") {
         filtered = filtered.filter(
-          (t) => t.category.toLowerCase() === selectedCategory.toLowerCase()
+          (t) => t.category.toLowerCase() === selectedCategory.toLowerCase(),
         );
       }
 
@@ -53,11 +53,11 @@ export default function Analytics() {
         filtered = filtered.filter(
           (t) =>
             new Date(t.date).getMonth() === now.getMonth() &&
-            new Date(t.date).getFullYear() === now.getFullYear()
+            new Date(t.date).getFullYear() === now.getFullYear(),
         );
       } else if (filter === "year") {
         filtered = filtered.filter(
-          (t) => new Date(t.date).getFullYear() === now.getFullYear()
+          (t) => new Date(t.date).getFullYear() === now.getFullYear(),
         );
       }
 

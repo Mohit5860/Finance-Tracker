@@ -7,7 +7,7 @@ import { Button } from "@/components/ui/button";
 export default function Reports() {
   const [reportData, setReportData] = useState(null);
   const [selectedMonth, setSelectedMonth] = useState(
-    new Date().toISOString().split("T")[0].slice(0, 7)
+    new Date().toISOString().split("T")[0].slice(0, 7),
   );
   const [loading, setLoading] = useState(false);
 
@@ -18,7 +18,7 @@ export default function Reports() {
       const data = await response.json();
 
       const [year, month] = selectedMonth.split("-");
-      const filtered = (data.transactions || []).filter((t) => {
+      const filtered = (data || []).filter((t) => {
         const tDate = new Date(t.date);
         return (
           tDate.getFullYear() === parseInt(year) &&
@@ -88,10 +88,7 @@ export default function Reports() {
     Object.entries(reportData.byCategory)
       .sort((a, b) => b[1] - a[1])
       .forEach(([category, amount]) => {
-        const percentage = (
-          (amount / reportData.totalSpent) *
-          100
-        ).toFixed(1);
+        const percentage = ((amount / reportData.totalSpent) * 100).toFixed(1);
         text += `${category.padEnd(20)} $${amount.toFixed(2).padStart(10)} (${percentage}%)\n`;
       });
 
@@ -129,7 +126,10 @@ export default function Reports() {
         {/* Month Selector */}
         <div className="bg-white dark:bg-slate-900 rounded-xl shadow-md p-6 mb-8 border border-gray-200 dark:border-slate-800 flex flex-col sm:flex-row gap-4 items-start sm:items-center">
           <div className="flex items-center gap-2">
-            <Calendar size={20} className="text-amber-600 dark:text-amber-400" />
+            <Calendar
+              size={20}
+              className="text-amber-600 dark:text-amber-400"
+            />
             <label className="font-semibold text-gray-900 dark:text-white">
               Select Month:
             </label>
